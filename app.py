@@ -5,7 +5,9 @@ import streamlit as st
 st.title("Llama13b-v2 Chat Demo")
 
 os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
-
+st.sidebar.markdown(
+    "Built with [Replicate](https://replicate.com), a platform for running AI models on live data by [Nirant Kasliwal](https://nirantk.com/about/)"
+)
 st.session_state[
     "llm_model"
 ] = "a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5"
