@@ -30,7 +30,7 @@ if prompt := st.chat_input("What is up?"):
         full_response = ""
         message_history = "\n".join(
             [
-                "{message:['role']}: {message['content']}"
+                f"{message:['role']}: {message['content']}"
                 for message in st.session_state.messages
             ]
         )
@@ -46,7 +46,6 @@ if prompt := st.chat_input("What is up?"):
             },
         )
     for item in output:
-        print(item)
         full_response += item
         message_placeholder.markdown(full_response + "▌")
         message_placeholder.markdown(full_response)
