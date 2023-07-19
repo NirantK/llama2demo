@@ -3,11 +3,28 @@ import replicate
 import streamlit as st
 
 from streamlit.logger import get_logger
+from streamlit.report_thread import get_report_ctx
+
+
+def _get_session():
+    import streamlit.report_thread as ReportThread
+    from streamlit.server.server import Server
+
+    session_id = get_report_ctx().session_id
+    session_info = Server.get_current()._get_session_info(session_id)
+    if session_info is None:
+        raise RuntimeError("Couldn't get your Streamlit Session object.")
+    return session_info.session
+
+
+user_session_id = _get_session()
 
 logger = get_logger(__name__)
 st.session_state.disabled = False
 st.title("Llama-v2 Chat Demo with Message History")
-st.markdown("Built by [Nirant Kasliwal](https://nirantk.com/about/). Sponsored by [The GenerativeAI Community 🇮🇳](https://nirantk.com/community)")
+st.markdown(
+    "Built by [Nirant Kasliwal](https://nirantk.com/about/). Sponsored by [The GenerativeAI Community 🇮🇳](https://nirantk.com/community)"
+)
 os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
 llama_family = {
     "Llama7B-v2-Chat": "a16z-infra/llama7b-v2-chat:4f0a4744c7295c024a1de15e1a63c880d3da035fa1f49bfd344fe076074c8eea",
@@ -69,7 +86,7 @@ if prompt := st.chat_input("What is up?"):
         message_placeholder = st.empty()
         full_response = ""
         message_history = "\n".join(list(get_message_history())[-3:])
-        logger.info(f"Message History: {message_history}")
+        logger.info(f"{user_session_id} Message History: {message_history}")
         output = replicate.run(
             llm_model,
             input={
@@ -95,5 +112,5 @@ if prompt := st.chat_input("What is up?"):
         # hide the radio button on click
         on_change=on_select(),
     )
-    logger.info(f"Response Sentiment: {response_sentiment}")
+    logger.info(f"{user_session_id} Response Sentiment: {response_sentiment}")
     st.session_state.messages.append({"role": "assistant", "content": full_response})
