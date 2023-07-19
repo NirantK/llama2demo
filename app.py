@@ -35,6 +35,7 @@ if prompt := st.chat_input("What is up?"):
                 "max_tokens": 100,
                 "temperature": 0.9,
                 "top_p": 0.1,
+                "debug": True,
             },
         )
     # The a16z-infra/llama13b-v2-chat model can stream output as it's running.
@@ -42,14 +43,6 @@ if prompt := st.chat_input("What is up?"):
     for item in output:
         # https://replicate.com/a16z-infra/llama13b-v2-chat/versions/df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5/api#output-schema
         print(item)
-        # for response in openai.ChatCompletion.create(
-        #     model=st.session_state["llm_model"],
-        #     messages=[
-        #         {"role": m["role"], "content": m["content"]}
-        #         for m in st.session_state.messages
-        #     ],
-        #     stream=True,
-        # ):
         full_response += item
         message_placeholder.markdown(full_response + "▌")
         message_placeholder.markdown(full_response)
