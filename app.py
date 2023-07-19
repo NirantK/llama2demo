@@ -20,6 +20,11 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
+def get_message_history():
+    for message in st.session_state.messages:
+        role, content = message["role"], message["content"]
+        yield f"{role}: {content}"
+
 if prompt := st.chat_input("What is up?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
@@ -29,10 +34,7 @@ if prompt := st.chat_input("What is up?"):
         message_placeholder = st.empty()
         full_response = ""
         message_history = "\n".join(
-            [
-                f"{message:['role']}: {message['content']}"
-                for message in st.session_state.messages
-            ]
+            list(get_message_history())[-3:]
         )
         print("Message History:", message_history)
         output = replicate.run(
