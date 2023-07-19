@@ -6,8 +6,6 @@ from streamlit.logger import get_logger
 
 logger = get_logger(__name__)
 
-logger.info('Hello world')
-
 st.title("Llama-v2 Chat Demo with Message History")
 st.markdown("Built by [Nirant Kasliwal](https://nirantk.com/about/)")
 os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
@@ -29,7 +27,7 @@ for message in st.session_state.messages:
 def get_message_history():
     for message in st.session_state.messages:
         role, content = message["role"], message["content"]
-        yield f"{role}: {content}"
+        yield f"{role.title()}: {content}"
 
 if prompt := st.chat_input("What is up?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
@@ -42,7 +40,7 @@ if prompt := st.chat_input("What is up?"):
         message_history = "\n".join(
             list(get_message_history())[-3:]
         )
-        logger.info("Message History:", message_history)
+        logger.info(f"Message History: {message_history}")
         output = replicate.run(
             llm_model,
             input={
