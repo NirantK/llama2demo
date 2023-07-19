@@ -42,10 +42,7 @@ if prompt := st.chat_input("What is up?"):
                 "debug": True,
             },
         )
-    # The a16z-infra/llama13b-v2-chat model can stream output as it's running.
-    # The predict method returns an iterator, and you can iterate over that output.
     for item in output:
-        # https://replicate.com/a16z-infra/llama13b-v2-chat/versions/df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5/api#output-schema
         print(item)
         full_response += item
         message_placeholder.markdown(full_response + "▌")
