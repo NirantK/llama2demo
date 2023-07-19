@@ -100,5 +100,5 @@ if prompt := st.chat_input("What is up?"):
         # hide the radio button on click
         on_change=on_select(),
     )
-    logger.info(f"{user_session_id} Response Sentiment: {response_sentiment}")
+    logger.info(f"{user_session_id} | {full_response} | {response_sentiment}")
     st.session_state.messages.append({"role": "assistant", "content": full_response})
