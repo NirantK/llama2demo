@@ -20,7 +20,7 @@ st.session_state["llm_model"] = llm_model
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-with st.sidebar():
+with st.sidebar:
     st.markdown("## Model Parameters")
     # repetition_penalty = st.slider("Repetition Penalty", 0.0, 2.0, 1.0, help="Penalty for repeated words in generated text; 1 is no penalty, values greater than 1 discourage repetition, less than 1 encourage it.")
     temperature = st.slider("Temperature", 0.01, 5.0, 0.9, help="Adjusts randomness of outputs, greater than 1 is random and 0 is deterministic, 0.75 is a good starting value.")
