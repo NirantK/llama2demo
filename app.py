@@ -1,23 +1,9 @@
 import os
 import replicate
 import streamlit as st
+import uuid
 
-from streamlit.logger import get_logger
-from streamlit.report_thread import get_report_ctx
-
-
-def _get_session():
-    import streamlit.report_thread as ReportThread
-    from streamlit.server.server import Server
-
-    session_id = get_report_ctx().session_id
-    session_info = Server.get_current()._get_session_info(session_id)
-    if session_info is None:
-        raise RuntimeError("Couldn't get your Streamlit Session object.")
-    return session_info.session
-
-
-user_session_id = _get_session()
+user_session_id = uuid.uuid4()
 
 logger = get_logger(__name__)
 st.session_state.disabled = False
