@@ -1,7 +1,9 @@
 import os
+import uuid
+
 import replicate
 import streamlit as st
-import uuid
+from streamlit.logger import get_logger
 
 user_session_id = uuid.uuid4()
 
