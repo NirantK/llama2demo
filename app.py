@@ -32,10 +32,6 @@ if prompt := st.chat_input("What is up?"):
             "a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5",
             input={
                 "prompt": prompt,
-                "max_tokens": 100,
-                "temperature": 0.2,
-                "top_p": 0.3,
-                "repetition_penalty": 0.2,
             },
         )
     # The a16z-infra/llama13b-v2-chat model can stream output as it's running.
