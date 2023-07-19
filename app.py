@@ -2,6 +2,12 @@ import os
 import replicate
 import streamlit as st
 
+from streamlit.logger import get_logger
+
+logger = get_logger(__name__)
+
+logger.info('Hello world')
+
 st.title("Llama-v2 Chat Demo with Message History")
 st.markdown("Built by [Nirant Kasliwal](https://nirantk.com/about/)")
 os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
@@ -36,14 +42,14 @@ if prompt := st.chat_input("What is up?"):
         message_history = "\n".join(
             list(get_message_history())[-3:]
         )
-        print("Message History:", message_history)
+        logger.info("Message History:", message_history)
         output = replicate.run(
             llm_model,
             input={
                 "prompt": f"{message_history}\nUser: {prompt}\nAssistant:",
                 "max_tokens": 100,
                 "temperature": 0.1,
-                "top_p": 0.1,
+                "top_p": 1.0,
                 "debug": True,
             },
         )
