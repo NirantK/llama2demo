@@ -12,7 +12,7 @@ llama_family = {
     "Llama13B-v2-Chat": "a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5",
 }
 model_choice = st.selectbox(
-    "Model", options=tuple(llama_family.keys()), default="Llama7B-v2-Chat"
+    "Model", options=tuple(llama_family.keys())
 )
 llm_model = llama_family[model_choice]
 st.session_state["llm_model"] = llm_model
