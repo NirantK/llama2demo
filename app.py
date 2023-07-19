@@ -2,10 +2,9 @@ import os
 import replicate
 import streamlit as st
 
-st.title("Llama13b-v2 Chat Demo")
-
+st.title("Llama-v2 Chat Demo with Message History")
+st.markdown("Built by [Nirant Kasliwal](https://nirantk.com/about/)")
 os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
-st.sidebar.markdown("Built by [Nirant Kasliwal](https://nirantk.com/about/)")
 llama_family = {
     "Llama7B-v2-Chat": "a16z-infra/llama7b-v2-chat:4f0a4744c7295c024a1de15e1a63c880d3da035fa1f49bfd344fe076074c8eea",
     "Llama13B-v2-Chat": "a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5",
