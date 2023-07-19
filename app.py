@@ -6,7 +6,7 @@ st.title("Llama13b-v2 Chat Demo")
 
 os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
 st.sidebar.markdown(
-    "Built with [Replicate](https://replicate.com), a platform for running AI models on live data by [Nirant Kasliwal](https://nirantk.com/about/)"
+    "Built by [Nirant Kasliwal](https://nirantk.com/about/)"
 )
 llama_family = {
     "Llama7B-v2-Chat": "a16z-infra/llama7b-v2-chat:4f0a4744c7295c024a1de15e1a63c880d3da035fa1f49bfd344fe076074c8eea",
@@ -35,7 +35,7 @@ if prompt := st.chat_input("What is up?"):
         full_response = ""
 
         output = replicate.run(
-            "a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5",
+            llm_model,
             input={
                 "prompt": f"User: {prompt}\nAssistant:",
                 "max_tokens": 100,
