@@ -21,7 +21,7 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 with st.sidebar.expander("Model Settings"):
-    repetition_penalty = st.slider("Repetition Penalty", 0.0, 2.0, 1.0, help="Penalty for repeated words in generated text; 1 is no penalty, values greater than 1 discourage repetition, less than 1 encourage it.")
+    # repetition_penalty = st.slider("Repetition Penalty", 0.0, 2.0, 1.0, help="Penalty for repeated words in generated text; 1 is no penalty, values greater than 1 discourage repetition, less than 1 encourage it.")
     temperature = st.slider("Temperature", 0.01, 5.0, 0.9, help="Adjusts randomness of outputs, greater than 1 is random and 0 is deterministic, 0.75 is a good starting value.")
     max_tokens = st.slider("Max Length in Number of Tokens", 10, 500, 100, help="Maximum number of tokens to generate. A word is generally 2-3 tokens")
     top_p = st.slider("Top P", 0.01, 1.0, 0.2)
@@ -54,7 +54,7 @@ if prompt := st.chat_input("What is up?"):
                 "max_tokens": max_tokens,
                 "temperature": temperature,
                 "top_p": top_p,
-                "repetition_penalty": repetition_penalty,
+                # "repetition_penalty": repetition_penalty,
                 "debug": True,
             },
         )
