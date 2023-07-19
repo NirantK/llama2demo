@@ -5,9 +5,7 @@ import streamlit as st
 st.title("Llama13b-v2 Chat Demo")
 
 os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
-st.sidebar.markdown(
-    "Built by [Nirant Kasliwal](https://nirantk.com/about/)"
-)
+st.sidebar.markdown("Built by [Nirant Kasliwal](https://nirantk.com/about/)")
 llama_family = {
     "Llama7B-v2-Chat": "a16z-infra/llama7b-v2-chat:4f0a4744c7295c024a1de15e1a63c880d3da035fa1f49bfd344fe076074c8eea",
     "Llama70B-v2-Chat": "replicate/llama70b-v2-chat:e951f18578850b652510200860fc4ea62b3b16fac280f83ff32282f87bbd2e48",
