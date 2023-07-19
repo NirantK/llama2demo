@@ -31,7 +31,7 @@ if prompt := st.chat_input("What is up?"):
         output = replicate.run(
             "a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5",
             input={
-                "prompt": prompt,
+                "prompt": f"User: {prompt}\nAssistant:",
                 "max_tokens": 100,
                 "temperature": 0.1,
             },
