@@ -34,10 +34,11 @@ if prompt := st.chat_input("What is up?"):
                 for message in st.session_state.messages
             ]
         )
+        print("Message History:", message_history)
         output = replicate.run(
             llm_model,
             input={
-                "prompt": "f{message_history}\nUser: {prompt}\nAssistant: }",
+                "prompt": f"{message_history}\nUser: {prompt}\nAssistant:",
                 "max_tokens": 100,
                 "temperature": 0.1,
                 "top_p": 0.1,
