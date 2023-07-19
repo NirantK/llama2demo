@@ -96,6 +96,7 @@ if prompt := st.chat_input("What is up?"):
         key="response_sentiment",
         disabled=st.session_state.disabled,
         horizontal=True,
+        index=1,
         help="This helps us improve the model.",
         # hide the radio button on click
         on_change=on_select(),
