@@ -19,8 +19,13 @@ llm_model = llama_family[model_choice]
 st.session_state["llm_model"] = llm_model
 if "messages" not in st.session_state:
     st.session_state.messages = []
-with st.sidebar:
+
+with st.sidebar.expander("Model Settings"):
+    
     temperature = st.slider("Temperature", 0.01, 5.0, 0.9)
+    max_tokens = st.slider("Max Tokens", 10, 500, 100)
+    top_p = st.slider("Top P", 0.01, 1.0, 0.2)
+
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
@@ -46,9 +51,9 @@ if prompt := st.chat_input("What is up?"):
             llm_model,
             input={
                 "prompt": f"{message_history}\nAssistant:",
-                "max_tokens": 100,
+                "max_tokens": max_tokens,
                 "temperature": temperature,
-                "top_p": 1.0,
+                "top_p": top_p,
                 "debug": True,
             },
         )
