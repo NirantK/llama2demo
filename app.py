@@ -19,15 +19,18 @@ llm_model = llama_family[model_choice]
 st.session_state["llm_model"] = llm_model
 if "messages" not in st.session_state:
     st.session_state.messages = []
-
+with st.sidebar:
+    temperature = st.slider("Temperature", 0.01, 5.0, 0.9)
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
+
 
 def get_message_history():
     for message in st.session_state.messages:
         role, content = message["role"], message["content"]
         yield f"{role.title()}: {content}"
+
 
 if prompt := st.chat_input("What is up?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
@@ -37,16 +40,14 @@ if prompt := st.chat_input("What is up?"):
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         full_response = ""
-        message_history = "\n".join(
-            list(get_message_history())[-3:]
-        )
+        message_history = "\n".join(list(get_message_history())[-3:])
         logger.info(f"Message History: {message_history}")
         output = replicate.run(
             llm_model,
             input={
                 "prompt": f"{message_history}\nAssistant:",
                 "max_tokens": 100,
-                "temperature": 0.1,
+                "temperature": temperature,
                 "top_p": 1.0,
                 "debug": True,
             },
