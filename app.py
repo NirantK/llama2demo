@@ -33,7 +33,7 @@ if prompt := st.chat_input("What is up?"):
             input={
                 "prompt": f"User: {prompt}\nAssistant:",
                 "max_tokens": 100,
-                "temperature": 0.9,
+                "temperature": 0.1,
                 "top_p": 0.1,
                 "debug": True,
             },
