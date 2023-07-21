@@ -2,6 +2,7 @@ import os
 import uuid
 
 import replicate
+import requests
 import streamlit as st
 from streamlit.logger import get_logger
 
@@ -14,6 +15,9 @@ st.markdown(
     "Built by [Nirant Kasliwal](https://nirantk.com/about/). Sponsored by [The GenerativeAI Community 🇮🇳](https://nirantk.com/community)"
 )
 os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
+fastapi_endpoint = st.secrets["FASTAPI_ENDPOINT"]
+secret_token = st.secrets["SECRET_TOKEN"] # Token for FastAPI endpoint authentication to log queries
+
 llama_family = {
     "Llama7B-v2-Chat": "a16z-infra/llama7b-v2-chat:4f0a4744c7295c024a1de15e1a63c880d3da035fa1f49bfd344fe076074c8eea",
     "Llama13B-v2-Chat": "a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5",
@@ -69,6 +73,12 @@ if prompt := st.chat_input("What is up?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
+        # Logging to FastAPI Endpoint
+        headers = {"Authorization": f"Bearer {secret_token}"}
+        log_data = {"log": f"User Query: {prompt}"}
+        response = requests.post(fastapi_endpoint, json=log_data, headers=headers)
+        if response.status_code == 200:
+            logger.info("Query logged successfully")
 
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
