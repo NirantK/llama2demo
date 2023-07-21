@@ -73,12 +73,6 @@ if prompt := st.chat_input("What is up?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
-        # Logging to FastAPI Endpoint
-        headers = {"Authorization": f"Bearer {secret_token}"}
-        log_data = {"log": f"User Query: {prompt}"}
-        response = requests.post(fastapi_endpoint, json=log_data, headers=headers)
-        if response.status_code == 200:
-            logger.info("Query logged successfully")
 
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
@@ -112,4 +106,12 @@ if prompt := st.chat_input("What is up?"):
         on_change=on_select(),
     )
     logger.info(f"{user_session_id} | {full_response} | {response_sentiment}")
+
+    # Logging to FastAPI Endpoint
+    headers = {"Authorization": f"Bearer {secret_token}"}
+    log_data = {"log": f"{user_session_id} | {full_response} | {response_sentiment}"}
+    response = requests.post(fastapi_endpoint, json=log_data, headers=headers, timeout=10)
+    if response.status_code == 200:
+        logger.info("Query logged successfully")
+
     st.session_state.messages.append({"role": "assistant", "content": full_response})
