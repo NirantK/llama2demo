@@ -19,7 +19,7 @@ class LogItem(BaseModel):
 AWS_ACCESS_KEY = os.environ.get("AWS_ACCESS_KEY")
 AWS_SECRET_KEY = os.environ.get("AWS_SECRET_KEY")
 S3_BUCKET_NAME = os.environ.get("S3_BUCKET_NAME", "llamachatlogs")
-S3_FILE_NAME = os.environ.get("S3_FILE_NAME", "llama-chat.txt")
+S3_FILE_NAME = os.environ.get("S3_FILE_NAME", "llamalogs.txt")
 SECRET_TOKEN = os.environ.get("SECRET_TOKEN")
 
 s3_client = boto3.client(
