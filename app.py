@@ -16,7 +16,9 @@ st.markdown(
 )
 os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
 fastapi_endpoint = st.secrets["FASTAPI_ENDPOINT"]
-secret_token = st.secrets["SECRET_TOKEN"] # Token for FastAPI endpoint authentication to log queries
+secret_token = st.secrets[
+    "SECRET_TOKEN"
+]  # Token for FastAPI endpoint authentication to log queries
 
 llama_family = {
     "Llama7B-v2-Chat": "a16z-infra/llama7b-v2-chat:4f0a4744c7295c024a1de15e1a63c880d3da035fa1f49bfd344fe076074c8eea",
@@ -109,8 +111,12 @@ if prompt := st.chat_input("What is up?"):
 
     # Logging to FastAPI Endpoint
     headers = {"Authorization": f"Bearer {secret_token}"}
-    log_data = {"log": f"{user_session_id} | {full_response} | {response_sentiment}"}
-    response = requests.post(fastapi_endpoint, json=log_data, headers=headers, timeout=10)
+    log_data = {
+        "log": f"{prompt} | {user_session_id} | {full_response} | {response_sentiment}"
+    }
+    response = requests.post(
+        fastapi_endpoint, json=log_data, headers=headers, timeout=10
+    )
     if response.status_code == 200:
         logger.info("Query logged successfully")
 
