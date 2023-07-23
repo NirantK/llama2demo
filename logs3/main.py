@@ -1,4 +1,5 @@
 import os
+import datetime
 
 import boto3
 from botocore.exceptions import ClientError
@@ -19,18 +20,19 @@ class LogItem(BaseModel):
 AWS_ACCESS_KEY = os.environ.get("AWS_ACCESS_KEY")
 AWS_SECRET_KEY = os.environ.get("AWS_SECRET_KEY")
 S3_BUCKET_NAME = os.environ.get("S3_BUCKET_NAME", "llamachatlogs")
-S3_FILE_NAME = os.environ.get("S3_FILE_NAME", "llamalogs.txt")
 SECRET_TOKEN = os.environ.get("SECRET_TOKEN")
 
 s3_client = boto3.client(
     "s3", aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY
 )
 
+
 def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
     token = credentials.credentials
     if token != SECRET_TOKEN:
         raise HTTPException(status_code=401, detail="Invalid token")
     return True
+
 
 @app.post("/log")
 async def log_to_s3(log_item: LogItem, authenticated: bool = Depends(verify_token)):
@@ -39,6 +41,12 @@ async def log_to_s3(log_item: LogItem, authenticated: bool = Depends(verify_toke
 
     if not log_line:
         return {"message": "No log provided."}
+
+    # Get the current date in the format YYYY-MM-DD
+    current_date = datetime.date.today().isoformat()
+
+    # Construct the log file name with the current date
+    S3_FILE_NAME = f"llamalogs_{current_date}.txt"
 
     # Read the existing file from S3
     try:
