@@ -16,7 +16,9 @@ st.markdown(
 )
 os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
 fastapi_endpoint = st.secrets["FASTAPI_ENDPOINT"]
-secret_token = st.secrets["SECRET_TOKEN"] # Token for FastAPI endpoint authentication to log queries
+secret_token = st.secrets[
+    "SECRET_TOKEN"
+]  # Token for FastAPI endpoint authentication to log queries
 
 llama_family = {
     "Llama7B-v2-Chat": "a16z-infra/llama7b-v2-chat:4f0a4744c7295c024a1de15e1a63c880d3da035fa1f49bfd344fe076074c8eea",
@@ -74,26 +76,47 @@ if prompt := st.chat_input("What is up?"):
     with st.chat_message("user"):
         st.markdown(prompt)
 
+    # Include System Prompt
+    system_prompt = """You are a helpful, respectful, and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.
+
+If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information."""
+    # st.session_state.messages.append({"role": "system", "content": system_prompt})
+    # with st.chat_message("system"):
+    #     st.markdown(system_prompt)
+
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         full_response = ""
         message_history = "\n".join(list(get_message_history())[-3:])
-        logger.info(f"{user_session_id} Message History: {message_history}")
+        # logger.info(f"Get message history func: {list(get_message_history())}")
+
+        # Combine user prompt and system prompt with the generation stopper
+        combined_prompt = (
+            f"[INST]<<SYS>>{system_prompt}<<SYS>>\n\n{message_history}\n\nAssitant:[/INST]"
+        )
         output = replicate.run(
             llm_model,
             input={
-                "prompt": f"{message_history}\nAssistant:",
-                "max_tokens": max_tokens,
+                "prompt": combined_prompt,
                 "temperature": temperature,
                 "top_p": top_p,
                 # "repetition_penalty": repetition_penalty,
                 "debug": True,
             },
         )
-    for item in output:
-        full_response += item
-        message_placeholder.markdown(full_response + "▌")
-        message_placeholder.markdown(full_response)
+
+        # Extract the assistant's response until the generation stopper
+        for item in output:
+            if "<<SYS>>" in item:
+                full_response = item.split("<<SYS>>")[0]
+                logger.info(f"System prompt detected")
+                break
+            else:
+                full_response += item
+            message_placeholder.markdown(full_response + "▌")
+            message_placeholder.markdown(full_response)
+
+    # Sentiment Radio Button
     response_sentiment = st.radio(
         "How was the Assistant's response?",
         ["😁", "😕", "😢"],
@@ -110,7 +133,9 @@ if prompt := st.chat_input("What is up?"):
     # Logging to FastAPI Endpoint
     headers = {"Authorization": f"Bearer {secret_token}"}
     log_data = {"log": f"{user_session_id} | {full_response} | {response_sentiment}"}
-    response = requests.post(fastapi_endpoint, json=log_data, headers=headers, timeout=10)
+    response = requests.post(
+        fastapi_endpoint, json=log_data, headers=headers, timeout=10
+    )
     if response.status_code == 200:
         logger.info("Query logged successfully")
 
