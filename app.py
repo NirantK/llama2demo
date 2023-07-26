@@ -91,13 +91,12 @@ If a question does not make any sense, or is not factually coherent, explain why
         # logger.info(f"Get message history func: {list(get_message_history())}")
 
         # Combine user prompt and system prompt with the generation stopper
-        combined_prompt = (
-            f"[INST]<<SYS>>{system_prompt}<<SYS>>\n\n{message_history}\n\nAssitant:[/INST]"
-        )
+        combined_prompt = f"[INST]<<SYS>>{system_prompt}<<SYS>>\n\n{message_history}\n\nAssitant:[/INST]"
         output = replicate.run(
             llm_model,
             input={
                 "prompt": combined_prompt,
+                "max_tokens": max_tokens,
                 "temperature": temperature,
                 "top_p": top_p,
                 # "repetition_penalty": repetition_penalty,
